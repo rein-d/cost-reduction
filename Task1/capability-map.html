@@ -1,0 +1,399 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>VitaStore — карта бизнес-возможностей L1/L2</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1720px;
+    padding: 40px 44px 34px 44px;
+    background: #f2f3f1;
+    font-family: "Segoe UI", "Inter", Arial, sans-serif;
+    color: #1d2329;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- header ---------- */
+  .top { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 18px; border-bottom: 2px solid #1d2329; }
+  .eyebrow { font-size: 12px; letter-spacing: 2.4px; text-transform: uppercase; color: #6b7570; font-weight: 600; }
+  h1 { font-size: 34px; font-weight: 700; letter-spacing: -0.5px; margin-top: 6px; }
+  .sub { font-size: 14.5px; color: #4d5850; margin-top: 7px; max-width: 900px; line-height: 1.45; }
+  .stamp { text-align: right; font-size: 12px; color: #6b7570; line-height: 1.7; }
+  .stamp b { display: block; font-size: 13px; color: #1d2329; }
+
+  /* ---------- kpi strip ---------- */
+  .kpis { display: flex; gap: 14px; margin: 18px 0 22px 0; }
+  .kpi { flex: 1; background: #fff; border: 1px solid #d9ddd7; border-left: 4px solid #1d2329; padding: 11px 14px; }
+  .kpi .v { font-size: 21px; font-weight: 700; letter-spacing: -0.3px; }
+  .kpi .l { font-size: 11.5px; color: #64706a; margin-top: 2px; line-height: 1.35; }
+  .kpi.alert { border-left-color: #b4372c; }
+  .kpi.alert .v { color: #b4372c; }
+
+  /* ---------- grid ---------- */
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .card { background: #fff; border: 1px solid #d9ddd7; display: flex; flex-direction: column; }
+  .card > header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 13px 10px 13px;
+    background: #22282d; color: #fff;
+  }
+  .num {
+    width: 22px; height: 22px; flex: 0 0 22px; border-radius: 50%;
+    background: #f2f3f1; color: #22282d;
+    font-size: 11.5px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .card h2 { font-size: 13.5px; font-weight: 600; line-height: 1.25; letter-spacing: 0.1px; }
+  .card .cnt { margin-left: auto; font-size: 10.5px; color: #a9b2ac; white-space: nowrap; }
+
+  .items { padding: 8px 9px 10px 9px; display: flex; flex-direction: column; gap: 5px; }
+  .item {
+    border-left: 3px solid #c8cfc9;
+    padding: 5px 8px 6px 8px;
+    background: #f7f8f6;
+  }
+  .row1 { display: flex; align-items: baseline; gap: 6px; }
+  .name { font-size: 12.5px; font-weight: 600; line-height: 1.25; }
+  .loc {
+    margin-left: auto; flex: 0 0 auto;
+    font-size: 9px; letter-spacing: 0.8px; font-weight: 700;
+    color: #6b7570; border: 1px solid #cdd3cd; padding: 0 4px; border-radius: 2px;
+    text-transform: uppercase;
+  }
+  .note { font-size: 10.5px; color: #5c6761; line-height: 1.3; margin-top: 2px; }
+  .dup {
+    display: inline-block; font-size: 8.5px; font-weight: 700; color: #fff;
+    background: #7b4b8a; border-radius: 2px; padding: 0 3px;
+    vertical-align: 2px; margin-left: 3px; letter-spacing: 0.3px;
+  }
+
+  .red    { border-left-color: #b4372c; background: #faeeec; }
+  .amber  { border-left-color: #c8871b; background: #fcf4e5; }
+  .green  { border-left-color: #2b7a4b; background: #e9f4ec; }
+  .grey   { border-left-color: #8a938d; background: #f4f5f3; }
+  .red   .note, .amber .note, .green .note, .grey .note { color: #515c56; }
+
+  /* ---------- legend ---------- */
+  .legend { display: flex; gap: 26px; align-items: flex-start; margin-top: 22px; padding: 15px 18px; background: #fff; border: 1px solid #d9ddd7; }
+  .lg-title { font-size: 11px; letter-spacing: 1.6px; text-transform: uppercase; color: #6b7570; font-weight: 700; padding-top: 2px; }
+  .lg { display: flex; gap: 8px; align-items: flex-start; }
+  .sw { width: 14px; height: 14px; flex: 0 0 14px; margin-top: 1px; border: 1px solid rgba(0,0,0,.12); }
+  .lg b { display: block; font-size: 12px; }
+  .lg span { font-size: 10.5px; color: #5c6761; line-height: 1.3; display: block; max-width: 235px; }
+  .sw.red { background: #e7c2bd; border-left: 3px solid #b4372c; }
+  .sw.amber { background: #f2dfba; border-left: 3px solid #c8871b; }
+  .sw.green { background: #c4e3ce; border-left: 3px solid #2b7a4b; }
+  .sw.grey { background: #e3e6e2; border-left: 3px solid #8a938d; }
+
+  .foot { display: flex; justify-content: space-between; margin-top: 12px; font-size: 10.5px; color: #6f7a73; line-height: 1.5; }
+  .foot .note-quote { max-width: 980px; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div>
+    <div class="eyebrow">VitaStore · Discovery, ноябрь 2026</div>
+    <h1>Карта бизнес-возможностей L1 / L2</h1>
+    <div class="sub">Аудит AS-IS по магазинам и центральному офису. Цвет показывает стоимость поддержки, дублирование и вклад в конкурентоспособность, а не «здоровье» функции вообще.</div>
+  </div>
+  <div class="stamp">
+    <b>52 возможности L2 · 8 доменов L1</b>
+    20 в красной зоне<br>
+    4 дифференциатора<br>
+    12 функций дублируется
+  </div>
+</div>
+
+<div class="kpis">
+  <div class="kpi alert"><div class="v">40%</div><div class="l">ИТ-бюджета уходит на поддержку локальных серверов и легаси-ПО</div></div>
+  <div class="kpi alert"><div class="v">500+</div><div class="l">серверов в подсобках: Windows Server, MS SQL, обновления и администрирование</div></div>
+  <div class="kpi"><div class="v">2 недели</div><div class="l">средний срок подключения купленного магазина, из них 80% ассортимента разбирается вручную</div></div>
+  <div class="kpi"><div class="v">2–3 недели</div><div class="l">разработка драйвера под новый банковский терминал (INC-8415, протокол ARCUS-2)</div></div>
+</div>
+
+<div class="grid">
+
+  <!-- 1 -->
+  <section class="card">
+    <header><div class="num">1</div><h2>Продажи и расчёт с покупателем</h2><div class="cnt">7</div></header>
+    <div class="items">
+      <div class="item red">
+        <div class="row1"><div class="name">Кассовые операции и фискализация</div><div class="loc">SM</div></div>
+        <div class="note">Толстый клиент, своя БД, лицензия на каждый магазин</div>
+      </div>
+      <div class="item red">
+        <div class="row1"><div class="name">Приём платежей, терминалы</div><div class="loc">SM</div></div>
+        <div class="note">Драйвер под каждый банк, жёсткая связка с кассой</div>
+      </div>
+      <div class="item amber">
+        <div class="row1"><div class="name">Возвраты и обмены</div><div class="loc">SM</div></div>
+        <div class="note">Регламент у каждой купленной сети свой</div>
+      </div>
+      <div class="item green">
+        <div class="row1"><div class="name">Выдача заказов Click &amp; Collect</div><div class="loc">SM</div></div>
+        <div class="note">500 точек как пункты выдачи — этого нет у конкурентов</div>
+      </div>
+      <div class="item red">
+        <div class="row1"><div class="name">Печать и замена ценников</div><div class="loc">SM</div></div>
+        <div class="note">Цена на полке расходится с прайсом из SAP</div>
+      </div>
+      <div class="item amber">
+        <div class="row1"><div class="name">Z-отчёты и кассовая отчётность</div><div class="loc">SM</div></div>
+        <div class="note">Сводится вручную, сверка с HQ раз в сутки</div>
+      </div>
+      <div class="item amber">
+        <div class="row1"><div class="name">Электронные чеки и ОФД</div><div class="loc">SM</div></div>
+        <div class="note">Свой оператор ОФД в каждом регионе, чеки теряются</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section class="card">
+    <header><div class="num">2</div><h2>Лояльность, промо и цены</h2><div class="cnt">7</div></header>
+    <div class="items">
+      <div class="item red">
+        <div class="row1"><div class="name">Программа лояльности<span class="dup">Д</span></div><div class="loc">SM</div></div>
+        <div class="note">Тетрадка на кассе; при обрыве связи баллы не начислить</div>
+      </div>
+      <div class="item green">
+        <div class="row1"><div class="name">Единый движок промоакций</div><div class="loc">HQ</div></div>
+        <div class="note">Promo Engine: механики на всю сеть, включая новые точки</div>
+      </div>
+      <div class="item amber">
+        <div class="row1"><div class="name">Прайс-листы и ценообразование</div><div class="loc">HQ</div></div>
+        <div class="note">XML по FTP в 02:00; прайс живёт с суточной задержкой</div>
+      </div>
+      <div class="item red">
+        <div class="row1"><div class="name">Локальные скидки магазина</div><div class="loc">SM</div></div>
+        <div class="note">Идут мимо Promo Engine, маржа по ним не считается</div>
+      </div>
+      <div class="item red">
+        <div class="row1"><div class="name">Промо-механики на кассе<span class="dup">Д</span></div><div class="loc">SM</div></div>
+        <div class="note">Логика скидок зашита в кассовый клиент</div>
+      </div>
+      <div class="item amber">
+        <div class="row1"><div class="name">Клиентская аналитика, сегменты</div><div class="loc">HQ</div></div>
+        <div class="note">Единого профиля покупателя нет: баллы в тетрадях</div>
+      </div>
+      <div class="item red">
+        <div class="row1"><div class="name">Подарочные карты и сертификаты<span class="dup">Д</span></div><div class="loc">SM</div></div>
+        <div class="note">Продаются вне учёта, обязательства не сходятся</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section class="card">
+    <header><div class="num">3</div><h2>Ассортимент, закупки, товарный учёт</h2><div class="cnt">7</div></header>
+    <div class="items">
+      <div class="item red">
+        <div class="row1"><div class="name">Мастер-данные товара (SKU)<span class="dup">Д</span></div><div class="loc">HQ</div></div>
+        <div class="note">VLOOKUP по штрихкоду, 500 позиций в час на товароведа</div>
+      </div>
+      <div class="item red">
+        <div class="row1"><div class="name">Сопоставление номенклатуры при M&amp;A<span class="dup">Д</span></div><div class="loc">HQ</div></div>
+        <div class="note">80% ассортимента просматривается глазами, 2 недели</div>
+      </div>
+      <div class="item red">
+        <div class="row1"><div class="name">Закупки у локальных поставщиков<span class="dup">Д</span></div><div class="loc">SM</div></div>
+        <div class="note">Вне SAP, свои договоры и цены в каждом магазине</div>
+      </div>
+      <div class="item red">
+        <div class="row1"><div class="name">Приёмка товара и накладные<span class="dup">Д</span></div><div class="loc">SM</div></div>
+        <div class="note">Локальный учёт, расхождения всплывают на инвентаризации</div>
+      </div>
+      <div class="item amber">
+        <div class="row1"><div class="name">Поставщики и договоры</div><div class="loc">HQ</div></div>
+        <div class="note">Часть контрагентов заведена вне ERP</div>
+      </div>
+      <div class="item amber">
+        <div class="row1"><div class="name">Инвентаризация и списания</div><div class="loc">SM</div></div>
+        <div class="note">Методики разные, результаты несопоставимы</div>
+      </div>
+      <div class="item grey">
+        <div class="row1"><div class="name">Планограммы и выкладка</div><div class="loc">HQ</div></div>
+        <div class="note">Стандарт сети, работает предсказуемо</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="card">
+    <header><div class="num">4</div><h2>Логистика и омниканальность</h2><div class="cnt">7</div></header>
+    <div class="items">
+      <div class="item green">
+        <div class="row1"><div class="name">Сборка и резерв заказов</div><div class="loc">HQ</div></div>
+        <div class="note">Smart Fulfillment — главное отличие сети на рынке</div>
+      </div>
+      <div class="item green">
+        <div class="row1"><div class="name">Выдача заказа в магазине</div><div class="loc">SM</div></div>
+        <div class="note">Заказ со склада в магазин у дома, срок 1–2 дня</div>
+      </div>
+      <div class="item red">
+        <div class="row1"><div class="name">Остатки в реальном времени</div><div class="loc">SM</div></div>
+        <div class="note">Обмен ночной, сток в Local DB отстаёт на сутки</div>
+      </div>
+      <div class="item amber">
+        <div class="row1"><div class="name">Пополнение магазинов и РЦ</div><div class="loc">HQ</div></div>
+        <div class="note">План в ERP, дальше ручные правки в Excel</div>
+      </div>
+      <div class="item amber">
+        <div class="row1"><div class="name">Складские операции РЦ</div><div class="loc">HQ</div></div>
+        <div class="note">Отдельной WMS нет, всё в учётном контуре ERP</div>
+      </div>
+      <div class="item amber">
+        <div class="row1"><div class="name">Доставка и маршрутизация</div><div class="loc">HQ</div></div>
+        <div class="note">Подрядчики, консолидация рейсов вручную</div>
+      </div>
+      <div class="item amber">
+        <div class="row1"><div class="name">Возвраты из магазинов в РЦ</div><div class="loc">HQ</div></div>
+        <div class="note">Логистика возвратов планируется вручную</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section class="card">
+    <header><div class="num">5</div><h2>Персонал и операции магазина</h2><div class="cnt">6</div></header>
+    <div class="items">
+      <div class="item red">
+        <div class="row1"><div class="name">Расчёт премий продавцам<span class="dup">Д</span></div><div class="loc">SM</div></div>
+        <div class="note">Своя формула в каждом магазине, считается вручную</div>
+      </div>
+      <div class="item red">
+        <div class="row1"><div class="name">Графики и учёт рабочего времени<span class="dup">Д</span></div><div class="loc">SM</div></div>
+        <div class="note">Excel и локальные базы, в SAP попадают с опозданием</div>
+      </div>
+      <div class="item red">
+        <div class="row1"><div class="name">Инкассация и наличность<span class="dup">Д</span></div><div class="loc">SM</div></div>
+        <div class="note">Ручной вывоз, у каждого региона свой банк</div>
+      </div>
+      <div class="item amber">
+        <div class="row1"><div class="name">Открытие и закрытие смены</div><div class="loc">SM</div></div>
+        <div class="note">Процедура не унифицирована, чек-листы бумажные</div>
+      </div>
+      <div class="item amber">
+        <div class="row1"><div class="name">Подбор и адаптация персонала</div><div class="loc">SM</div></div>
+        <div class="note">Часть найма закрывается на месте, без общей воронки</div>
+      </div>
+      <div class="item grey">
+        <div class="row1"><div class="name">Обучение и стандарты сервиса</div><div class="loc">HQ</div></div>
+        <div class="note">Корпоративная академия, единая программа</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section class="card">
+    <header><div class="num">6</div><h2>Финансы и управленческий учёт</h2><div class="cnt">6</div></header>
+    <div class="items">
+      <div class="item grey">
+        <div class="row1"><div class="name">Бухгалтерский и налоговый учёт</div><div class="loc">HQ</div></div>
+        <div class="note">SAP ERP, единый контур, аудит проходит без замечаний</div>
+      </div>
+      <div class="item amber">
+        <div class="row1"><div class="name">Расчёты с поставщиками, сверки</div><div class="loc">HQ</div></div>
+        <div class="note">Локальные поставщики вне контура, сверка письмами</div>
+      </div>
+      <div class="item amber">
+        <div class="row1"><div class="name">Себестоимость и маржа</div><div class="loc">HQ</div></div>
+        <div class="note">Искажена локальным учётом и ручными скидками</div>
+      </div>
+      <div class="item amber">
+        <div class="row1"><div class="name">Контроль потерь (shrinkage)</div><div class="loc">HQ</div></div>
+        <div class="note">Считается по-разному, между магазинами не сравнить</div>
+      </div>
+      <div class="item grey">
+        <div class="row1"><div class="name">Бюджетирование и отчётность</div><div class="loc">HQ</div></div>
+        <div class="note">Регламент закрытия периода соблюдается</div>
+      </div>
+      <div class="item amber">
+        <div class="row1"><div class="name">Внутренний контроль и ревизия</div><div class="loc">HQ</div></div>
+        <div class="note">Проверки по выборке, сквозной аналитики нет</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section class="card">
+    <header><div class="num">7</div><h2>ИТ-инфраструктура и данные</h2><div class="cnt">6</div></header>
+    <div class="items">
+      <div class="item red">
+        <div class="row1"><div class="name">Серверы и БД в магазинах</div><div class="loc">SM</div></div>
+        <div class="note">500+ машин, лицензии Windows Server и MS SQL, бэкапы на месте</div>
+      </div>
+      <div class="item red">
+        <div class="row1"><div class="name">Парк устройств и драйверы</div><div class="loc">SM</div></div>
+        <div class="note">Каждый новый терминал — отдельная сборка кассы</div>
+      </div>
+      <div class="item red">
+        <div class="row1"><div class="name">Интеграция данных при M&amp;A<span class="dup">Д</span></div><div class="loc">HQ</div></div>
+        <div class="note">CSV на почту, ручной маппинг, командировки ИТ-бригад</div>
+      </div>
+      <div class="item amber">
+        <div class="row1"><div class="name">Service Desk магазинов</div><div class="loc">HQ</div></div>
+        <div class="note">Перегружен легаси: выезды, «умерший» диск, ротация железа</div>
+      </div>
+      <div class="item amber">
+        <div class="row1"><div class="name">ИБ и соответствие PCI DSS</div><div class="loc">HQ</div></div>
+        <div class="note">Несколько контуров, персональные данные в магазинах</div>
+      </div>
+      <div class="item amber">
+        <div class="row1"><div class="name">BI и управленческая отчётность</div><div class="loc">HQ</div></div>
+        <div class="note">Сборка из разных источников, цифры не сходятся</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 -->
+  <section class="card">
+    <header><div class="num">8</div><h2>Развитие сети и интеграция</h2><div class="cnt">6</div></header>
+    <div class="items">
+      <div class="item red">
+        <div class="row1"><div class="name">Онбординг новой точки<span class="dup">Д</span></div><div class="loc">HQ</div></div>
+        <div class="note">14 дней, выезд инженера, ручное сведение номенклатуры</div>
+      </div>
+      <div class="item red">
+        <div class="row1"><div class="name">Унификация процессов купленных сетей</div><div class="loc">HQ</div></div>
+        <div class="note">У каждой сети свой уклад, ИТ подстраивается под него</div>
+      </div>
+      <div class="item amber">
+        <div class="row1"><div class="name">Бренд и стандарты сети</div><div class="loc">HQ</div></div>
+        <div class="note">Ребрендинг идёт после сделки, отстаёт от открытия</div>
+      </div>
+      <div class="item grey">
+        <div class="row1"><div class="name">Оценка и due diligence</div><div class="loc">HQ</div></div>
+        <div class="note">Отработанный процесс департамента развития</div>
+      </div>
+      <div class="item amber">
+        <div class="row1"><div class="name">Пост-интеграционная синергия</div><div class="loc">HQ</div></div>
+        <div class="note">Эффект сделки после закрытия никто не измеряет</div>
+      </div>
+      <div class="item grey">
+        <div class="row1"><div class="name">Юридическое сопровождение сделки</div><div class="loc">HQ</div></div>
+        <div class="note">Внешние консультанты, процесс отлажен</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="legend">
+  <div class="lg-title">Легенда</div>
+  <div class="lg"><div class="sw red"></div><div><b>Красный — дорого и проблемно</b><span>Высокий TCO, ручной труд, зависимость от площадки. Первые кандидаты на замену.</span></div></div>
+  <div class="lg"><div class="sw amber"></div><div><b>Жёлтый — работает с оговорками</b><span>Дубли, обходные процедуры, данные с задержкой. Требует стандартизации, но не горит.</span></div></div>
+  <div class="lg"><div class="sw green"></div><div><b>Зелёный — конкурентное преимущество</b><span>Нельзя терять при унификации. Меняем платформу, логику сохраняем.</span></div></div>
+  <div class="lg"><div class="sw grey"></div><div><b>Серый — стандарт</b><span>Работает, не создаёт ценности сама по себе. Спокойно уходит в SaaS.</span></div></div>
+  <div class="lg"><div><b>Д — дублирование</b><span style="max-width:200px">Одна и та же функция живёт в магазинах в разных версиях.</span></div></div>
+</div>
+
+<div class="foot">
+  <div class="note-quote">Основание: регламент интеграции точки (этапы 4.1–7.1), тикеты INC-8402 / INC-8415 / INC-8433, интервью категорийного менеджера, схема AS-IS C4. Расхождение со схемой: real-time REST между кассой и SAP на практике не работает, обмен идёт ночным XML по FTP.</div>
+  <div style="text-align:right">Зелёный цвет означает «не воспроизводится конкурентами за разумные деньги»,<br>а не «функция в хорошем состоянии».</div>
+</div>
+
+</body>
+</html>
